@@ -23,7 +23,7 @@ r=sr.Recognizer() #initialising recogniser, responsible for recognising speech
 def record_audio(ask=False):
     with sr.Microphone() as source:
         if ask:
-            alexis_speak(ask)
+            donna_speak(ask)
 
         audio = r.listen(source) #get what we say in microphone
         voice_data = r.recognize_google(audio) #capture the voice data
@@ -32,12 +32,12 @@ def record_audio(ask=False):
             voice_data = r.recognize_google(audio)
 
         except sr.UnknownValueError:
-             alexis_speak('Sorry, I did not get that')
+             donna_speak('Sorry, I did not get that')
         except sr.RequestError:
-            alexis_speak('sorry,my speech service is down')
+            donna_speak('sorry,my speech service is down')
         return voice_data
 
-def alexis_speak(audio_string):
+def donna_speak(audio_string):
     tts = gTTS(text=audio_string, lang='en')
     r = random.randint(1, 1000000)
     audio_file = 'audio-' + str(r) + '.mp3'
@@ -51,25 +51,25 @@ def alexis_speak(audio_string):
 
 def respond(voice_data):
     if 'what is your name' in voice_data:
-        alexis_speak('My name is alexis')
+        donna_speak('My name is alexis')
     if 'what time is it' in voice_data:
-        alexis_speak(ctime())
+        donna_speak(ctime())
     if 'search' in voice_data:
         search= record_audio('What do you want to search')
 
         url='https://www.google.com/search?q=' + search
         webbrowser.get().open(url)
-        alexis_speak('Here is what I found for '+search)
+        donna_speak('Here is what I found for '+search)
     if 'find location' in voice_data:
         location= record_audio('What is the location')
         url='https://google.nl/maps/place/' + location + '/&amp;'
         webbrowser.get().open(url)
-        alexis_speak('Here is the location of '+location)
+        donna_speak('Here is the location of '+location)
     if "email" in voice_data:
-        alexis_speak("What is the subject?")
+        donna_speak("What is the subject?")
         time.sleep(3)
         subject = record_audio()
-        alexis_speak("What should I say?")
+        donna_speak("What should I say?")
         message = record_audio()
         content = "Subject: {}\n\n{}".format(subject, message)
         # init gmail SMTP
@@ -84,10 +84,10 @@ def respond(voice_data):
         mail.sendmail("18bcs1416.cse@gmail.com", "cu.18bcs1416@gmail.com", content)
         # end mail connection
         mail.close()
-        alexis_speak("Email sent.")
+        donna_speak("Email sent.")
 
     if "play on YouTube" in voice_data:
-        alexis_speak("Which music would you like me to play")
+        donna_speak("Which music would you like me to play")
         text = record_audio()
         text = text.split(" ")
         search_5 = str(text[0:])
@@ -110,10 +110,10 @@ def respond(voice_data):
             # store the value corresponding
             # to the "temp" key of y
             current_temperature = y["temp"]
-            alexis_speak('It is {} degree celcius in {}'.format(current_temperature, city))
+            donna_speak('It is {} degree celcius in {}'.format(current_temperature, city))
             time.sleep(3)
         else:
-            alexis_speak("city not found")
+            donna_speak("city not found")
 
 
 
@@ -123,14 +123,14 @@ def respond(voice_data):
         os.startfile(os.path.join(songs_dir, songs[0]))
 
     if "Wikipedia" in voice_data:
-        alexis_speak("Searching")
+        donna_speak("Searching")
         voice_data = voice_data.replace("wikipedia", "")
         result = wikipedia.summary(voice_data, sentences = 2)
-        alexis_speak(result)
+        donna_speak(result)
 
 
     '''if "YouTube" in voice_data:
-        alexis_speak("What should i show")
+        donna_speak("What should i show")
         reg_ex = re.search("youtube (.+)", voice_data)
         if reg_ex:
             domain = voice_data.split("youtube", 1)[1]
@@ -145,7 +145,7 @@ def respond(voice_data):
 
 
 time.sleep(1)
-alexis_speak('Hello Mam, How can I help you?')
+donna_speak('Hello Mam, How can I help you?')
 while 1:
     voice_data=record_audio() #recording the audio and use it to pass to respond command
     respond(voice_data)
